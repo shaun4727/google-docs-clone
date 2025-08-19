@@ -8,6 +8,7 @@ import { type Level } from '@tiptap/extension-heading';
 import {
 	BoldIcon,
 	ChevronDownIcon,
+	HighlighterIcon,
 	ItalicIcon,
 	ListTodoIcon,
 	LucideIcon,
@@ -19,12 +20,58 @@ import {
 	UnderlineIcon,
 	Undo2Icon,
 } from 'lucide-react';
+import { type ColorResult, SketchPicker } from 'react-color';
 
 interface ToolbarButtonProps {
 	onClick?: () => void;
 	isActive?: Boolean;
 	icon: LucideIcon;
 }
+
+const TextColorButton = () => {
+	const { editor } = useEditorStore();
+	const value = editor?.getAttributes('textStyle').color || '#000000';
+
+	const onChange = (color: ColorResult) => {
+		editor?.chain().focus().setColor(color.hex).run();
+	};
+
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<span className="h-7 min-w-7 shrink-0 flex flex-col justify-center items-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+					<span className="text-xs">A</span>
+					<div className="h-0.5 w-full" style={{ backgroundColor: value }} />
+				</span>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent className="p-2.5">
+				<SketchPicker color={value} onChange={onChange} />
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
+};
+
+const HighlightColorButton = () => {
+	const { editor } = useEditorStore();
+	const value = editor?.getAttributes('highlight').color || '#ffffff';
+
+	const onChange = (color: ColorResult) => {
+		editor?.chain().focus().setHighlight({ color: color.hex }).run();
+	};
+
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<span className="h-7 min-w-7 shrink-0 flex items-center justify-between rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+					<HighlighterIcon className="size-4" />
+				</span>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent className="p-2.5">
+				<SketchPicker color={value} onChange={onChange} />
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
+};
 
 const HeadingLevelButton = () => {
 	const { editor } = useEditorStore();
@@ -248,6 +295,8 @@ const Toolbar = () => {
 			{sections[1].map((item) => (
 				<ToolbarButton key={item.label} {...item} />
 			))}
+			<TextColorButton />
+			<HighlightColorButton />
 			{/* TODO: Font Family */}
 			<FontFamilyButton />
 			<Separator orientation="vertical" className="h-6 bg-neutral-300" />
@@ -255,6 +304,7 @@ const Toolbar = () => {
 			<Separator orientation="vertical" className="h-6 bg-neutral-300" />
 			{/* TODO: Font Size */}
 			<Separator orientation="vertical" className="h-6 bg-neutral-300" />
+
 			{/* TODO: Link */}
 			{/* TODO: Image */}
 			{/* TODO: Align */}
