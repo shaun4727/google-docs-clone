@@ -25,6 +25,8 @@ import {
 	ImageIcon,
 	ItalicIcon,
 	Link2Icon,
+	ListIcon,
+	ListOrderedIcon,
 	ListTodoIcon,
 	LucideIcon,
 	MessageSquarePlusIcon,
@@ -45,6 +47,14 @@ interface ToolbarButtonProps {
 	isActive?: Boolean;
 	icon: LucideIcon;
 }
+
+const FontSizeButton = () => {
+	const { editor } = useEditorStore();
+
+	const currentFontSize = editor?.getAttributes('textStyle').fontSize?editor?.get;
+
+	return <div>Font Size</div>;
+};
 
 const LinkButton = () => {
 	const { editor } = useEditorStore();
@@ -161,7 +171,6 @@ const ImageButton = () => {
 
 const AlignButton = () => {
 	const { editor } = useEditorStore();
-
 	const alignments = [
 		{
 			label: 'Align Left',
@@ -184,6 +193,7 @@ const AlignButton = () => {
 			icon: AlignJustifyIcon,
 		},
 	];
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -201,6 +211,50 @@ const AlignButton = () => {
 							editor?.isActive({ textAlign: value }) && 'bg-neutral-200/80',
 						)}
 						onClick={() => editor?.chain().focus().setTextAlign(value).run()}
+					>
+						<Icon className="size-4" />
+						<span className="text-sm">{label}</span>
+					</button>
+				))}
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
+};
+
+const ListButton = () => {
+	const { editor } = useEditorStore();
+
+	const lists = [
+		{
+			label: 'Bullet List',
+			isActive: () => editor?.isActive('bulletList'),
+			icon: ListIcon,
+			onClick: () => editor?.chain().focus().toggleBulletList().run(),
+		},
+		{
+			label: 'Ordered List',
+			isActive: () => editor?.isActive('orderedList'),
+			icon: ListOrderedIcon,
+			onClick: () => editor?.chain().focus().toggleOrderedList().run(),
+		},
+	];
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<span className="h-7 min-w-7 shrink-0 flex items-center justify-between rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+					<ListIcon className="size-4" />
+				</span>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent className="p-1 flex flex-col gap-y-1">
+				{lists.map(({ label, isActive, onClick, icon: Icon }) => (
+					<button
+						key={label}
+						className={cn(
+							'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80',
+
+							isActive() && 'bg-neutral-200/80',
+						)}
+						onClick={onClick}
 					>
 						<Icon className="size-4" />
 						<span className="text-sm">{label}</span>
@@ -475,6 +529,8 @@ const Toolbar = () => {
 				<ToolbarButton key={item.label} {...item} />
 			))}
 			<Separator orientation="vertical" className="h-6 bg-neutral-300" />
+			<FontSizeButton />
+			<Separator orientation="vertical" className="h-6 bg-neutral-300" />
 			{sections[1].map((item) => (
 				<ToolbarButton key={item.label} {...item} />
 			))}
@@ -495,6 +551,7 @@ const Toolbar = () => {
 			<AlignButton />
 			{/* TODO: Line Height */}
 			{/* TODO: List */}
+			<ListButton />
 			<Separator orientation="vertical" className="h-6 bg-neutral-300" />
 			{sections[2].map((item) => (
 				<ToolbarButton key={item.label} {...item} />

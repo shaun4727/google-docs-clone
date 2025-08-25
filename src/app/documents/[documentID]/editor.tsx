@@ -90,6 +90,7 @@ const EditorPage = () => {
 			TableRow,
 			TextStyle,
 			Color,
+
 			Highlight.configure({
 				multicolor: true,
 			}),
