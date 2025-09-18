@@ -1,5 +1,7 @@
 'use client';
 
+import { FontSizeExtension } from '@/extensions/font-size';
+import { LineHeightExtension } from '@/extensions/line-height';
 import { useEditorStore } from '@/store/use-editor-store';
 import { Mark, mergeAttributes } from '@tiptap/core';
 import { Color } from '@tiptap/extension-color';
@@ -19,6 +21,7 @@ import Underline from '@tiptap/extension-underline';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import ImageResize from 'tiptap-extension-resize-image';
+import { Ruler } from './ruler';
 
 export const NoSpellcheck = Mark.create({
 	name: 'nospellcheck',
@@ -44,6 +47,7 @@ export const NoSpellcheck = Mark.create({
 const EditorPage = () => {
 	const { setEditor } = useEditorStore();
 	const editor = useEditor({
+		immediatelyRender: false,
 		onCreate: ({ editor }) => {
 			setEditor(editor);
 		},
@@ -77,6 +81,11 @@ const EditorPage = () => {
 		},
 		extensions: [
 			StarterKit,
+			LineHeightExtension.configure({
+				types: ['heading', 'paragraph'],
+				defaultLineHeight: 'normal',
+			}),
+			FontSizeExtension,
 			NoSpellcheck,
 			Link.configure({
 				openOnClick: false,
@@ -120,12 +129,12 @@ const EditorPage = () => {
           </tbody>
         </table>`,
 		// Don't render immediately on the server to avoid SSR issues
-		immediatelyRender: false,
 	});
 
 	return (
 		<div className="size-full overflow-x-auto flex justify-center bg-[#f9fbfd] px-4 print:p-0 print-bg-white print:overflow-visible">
-			<div className="min-w-max flex justify-center w-[816px] py-4 print:py-0 ">
+			<Ruler />
+			<div className="min-w-max flex justify-center w-[816px] py-4 print:py-0 mt-4 ">
 				<EditorContent editor={editor} />
 			</div>
 		</div>
