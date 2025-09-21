@@ -1,10 +1,11 @@
 import EditorPage from './editor';
+import { Navbar } from './navbar';
 import Toolbar from './toolbar';
 
 const DocumentIDPage = () => {
 	return (
 		<div>
-			<h1>Document ID Page</h1>
+			<Navbar />
 			<Toolbar />
 			<EditorPage />
 		</div>
