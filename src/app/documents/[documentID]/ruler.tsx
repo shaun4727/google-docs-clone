@@ -65,7 +65,7 @@ export const Ruler = () => {
 			onMouseMove={handleMouseMove}
 			onMouseUp={handleMouseUp}
 			onMouseLeave={handleMouseUp}
-			className="h-6 border-b border-gray-300 flex items-end relative select-none bg-black print:hidden"
+			className="mt-32 h-6 border-b border-gray-300 flex items-end relative select-none bg-black print:hidden"
 		>
 			<div id="ruler-container" className="max-w-[816px] mx-auto w-full h-full relative">
 				<div className="absolute inset-x-0 bottom-0 h-full">
