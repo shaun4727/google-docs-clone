@@ -18,8 +18,19 @@ export const create = mutation({
 	},
 });
 
+// export const get = query({
+// 	args: { paginationOpts: paginationOptsValidator },
+// 	handler: async (ctx, args) => {
+// 		return await ctx.db.query('documents').paginate(args.paginationOpts);
+// 	},
+// });
+
+import { paginationOptsValidator } from 'convex/server';
+
 export const get = query({
-	handler: async (ctx) => {
-		return await ctx.db.query('documents').collect();
+	args: { paginationOpts: paginationOptsValidator },
+	handler: async (ctx, args) => {
+		const result = await ctx.db.query('documents').paginate(args.paginationOpts);
+		return result;
 	},
 });
