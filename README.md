@@ -5,4 +5,4 @@ run this project with commands
 -   npm run dev
 -   npx convex dev
 
-**continue from 5:20:00**
+**done till 7:30:00**
