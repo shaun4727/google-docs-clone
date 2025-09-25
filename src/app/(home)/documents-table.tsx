@@ -1,12 +1,14 @@
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { PaginationStatus } from 'convex/react';
 import { LoaderIcon } from 'lucide-react';
 import { Doc } from '../../../convex/_generated/dataModel';
+import { DocumentRow } from './document-row';
 // import {Table,TableBody,TableCell,TableHead,TableHeader,TableRow} from "@/components/ui/table";
 
 interface DocumentsTableProps {
 	documents: Doc<'documents'>[] | undefined;
-	loadMore: (numItems: number) => void;
-	status: PaginationStatus;
+	loadMore?: (numItems: number) => void;
+	status?: PaginationStatus;
 }
 
 export const DocumentsTable = ({ documents, loadMore, status }: DocumentsTableProps) => {
@@ -18,7 +20,29 @@ export const DocumentsTable = ({ documents, loadMore, status }: DocumentsTablePr
 					<LoaderIcon className="animate-spin text-muted-foreground sized-5" />{' '}
 				</div>
 			) : (
-				<div>Loaded.</div>
+				<Table>
+					<TableHeader>
+						<TableRow className="hover:bg-transparent border-none">
+							<TableHead>Name</TableHead>
+							<TableHead>&nbsp; </TableHead>
+							<TableHead className="hidden md:table-cell">Shared</TableHead>
+							<TableHead className="hidden md:table-cell">Created at</TableHead>
+						</TableRow>
+					</TableHeader>
+					{documents.length === 0 ? (
+						<TableBody>
+							<TableRow className="hover:bg-transparent">
+								<TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+									No Documents found
+								</TableCell>
+							</TableRow>
+						</TableBody>
+					) : (
+						<TableBody>
+							{documents?.map((document) => <DocumentRow key={document._id} document={document} />)}
+						</TableBody>
+					)}
+				</Table>
 			)}
 		</div>
 	);
